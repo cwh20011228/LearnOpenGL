@@ -97,7 +97,7 @@ Texture::Texture(
 
 	int channels;	//  channels_in_file：接收图像通道数的指针
 	// 反转y轴
-	stbi_set_flip_vertically_on_load(true);
+	//stbi_set_flip_vertically_on_load(true);
 
 	// 计算整张图片的大小
 	//Assimp规定： 如果内嵌纹理是png或jpg压缩格式，height=0,width就代表图片大小
@@ -198,7 +198,7 @@ Texture* Texture::createTextureFromMemory(
 	uint32_t heightIn)
 {
 	//1. 检查是否缓存过本路径对应的纹理对象
-	std::map<std::string, Texture*>::iterator iter = mTextureCache.find(path);
+	auto iter = mTextureCache.find(path);
 	if (iter != mTextureCache.end())
 	{
 		return iter->second;

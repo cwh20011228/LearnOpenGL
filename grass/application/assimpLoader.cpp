@@ -3,13 +3,12 @@
 Object* AssimpLoader::load(const std::string& path)
 {
 	//拿出模型所在目录  最后一个/出现的位置
-	std::size_t lastIndex = path.find_last_of("//");
+	std::size_t lastIndex = path.find_last_of("/");
 	std::string rootPath = path.substr(0, lastIndex + 1);
 
-
 	Object* rootNode = new Object();
-	Assimp::Importer importer;	// 导入器
-	const aiScene* scene= importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals);
+	Assimp::Importer importer;	
+	const aiScene* scene= importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_FlipUVs);
 
 	// 验证读取是否正确		不完整的标志位：AI_SCENE_FLAGS_INCOMPLETE
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
