@@ -76,7 +76,7 @@ glm::mat4 Object::getModelMatrix() const	// 得到模型变换矩阵
 	transform = glm::rotate(transform, glm::radians(mAngleZ), glm::vec3(0.0f, 0.0f, 1.0f));
 
 	// 在世界坐标系中平移
-	transform = parentModelMatrix*glm::translate(glm::mat4(1.0f), mPosition) * transform;
+	transform = parentModelMatrix * glm::translate(glm::mat4(1.0f), mPosition) * transform;
 
 	return transform;
 }

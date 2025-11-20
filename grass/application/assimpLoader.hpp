@@ -8,9 +8,7 @@
 #include "../glframework/mesh/mesh.hpp"
 #include "../glframework/material/phongMaterial.hpp"
 #include "../glframework/texture.h"
-#include "assimp/Importer.hpp"
-#include "assimp/scene.h"
-#include "assimp/postprocess.h"
+#include "assimpTools.hpp"
 
 class AssimpLoader
 {
@@ -28,9 +26,6 @@ private:
 		Object* parent,
 		const aiScene* scene,
 		const std::string rootPath);
-
-	// 将aiMatrix4x4转换为glm::mat4
-	static glm::mat4 getMat4f(aiMatrix4x4 value);
 
 	// 处理节点中的mesh
 	static Mesh* processMesh(

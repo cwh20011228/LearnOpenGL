@@ -64,5 +64,4 @@ private:
 	unsigned int mUnit{ 0 };
 	unsigned int mTextureTarget{ GL_TEXTURE_2D };
 	static std::map<std::string, Texture*> mTextureCache;
-
 };

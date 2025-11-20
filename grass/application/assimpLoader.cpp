@@ -1,5 +1,6 @@
 #include "assimpLoader.hpp"
 
+
 Object* AssimpLoader::load(const std::string& path)
 {
 	//拿出模型所在目录  最后一个/出现的位置
@@ -33,7 +34,7 @@ void AssimpLoader::processNode(
 	Object* node = new Object();
 	parent->addChild(node);
 
-	glm::mat4 localMatrix = getMat4f(ainode->mTransformation);
+	glm::mat4 localMatrix = AssimpTools::getGLMat4(ainode->mTransformation);
 
 	// 位置
 	glm::vec3 position;
@@ -152,19 +153,6 @@ Mesh* AssimpLoader::processMesh(
 
 	return new Mesh(geometry, material);
 }
-
-glm::mat4 AssimpLoader::getMat4f(aiMatrix4x4 value)
-{
-	glm::mat4 to(
-		value.a1, value.a2, value.a3, value.a4,
-		value.b1, value.b2, value.b3, value.b4,
-		value.c1, value.c2, value.c3, value.c4,
-		value.d1, value.d2, value.d3, value.d4
-	);
-	
-	return to;
-}
-
 
 AssimpLoader::AssimpLoader()
 {

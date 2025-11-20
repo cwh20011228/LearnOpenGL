@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+
 // 静态变量在数据段存储，在编译时分配内存，（运行时）首次使用时初始化
 Application* Application::mInstance = nullptr;
 
@@ -13,11 +14,11 @@ Application* Application::getInstance()
 	}
 	return mInstance;
 }
- 
+
 
 Application::Application()
 {
-	
+
 }
 
 Application::~Application()
@@ -29,7 +30,7 @@ Application::~Application()
 	}*/
 }
 
-bool Application::Init(const int& width, const int& height, const char* title)
+bool Application::Init(const int& width, const int& height, std::string title)
 {
 	m_width = width;
 	m_height = height;
@@ -38,7 +39,7 @@ bool Application::Init(const int& width, const int& height, const char* title)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	mWindow = glfwCreateWindow(m_width,m_height, title, NULL, NULL);
+	mWindow = glfwCreateWindow(m_width, m_height, title.c_str(), NULL, NULL);
 	if (mWindow == nullptr)
 	{
 		return false;
@@ -68,15 +69,46 @@ bool Application::Init(const int& width, const int& height, const char* title)
 
 bool Application::update()
 {
-	if (glfwWindowShouldClose(mWindow))
+	// 启用V-Sync(启用垂直同步)
+	//glfwSwapInterval(1);
+
+	if (!glfwWindowShouldClose(mWindow))
 	{
-		return false;
+		glfwPollEvents();   // 接收并分发窗口信息
+
+		glfwSwapBuffers(mWindow);	// 切换双缓存
+
+		return true;
 	}
-	glfwPollEvents();   // 接收并分发窗口信息
 
-	glfwSwapBuffers(mWindow);	// 切换双缓存
+	return false;
+}
 
-	return true;
+void Application::calculateFPS(double& preTime, unsigned int& counter)
+{
+	double timeDiff;
+
+	double crntTime = glfwGetTime();
+	timeDiff = crntTime - preTime;
+	counter++;
+
+	// 每秒更新一次
+	if (timeDiff >= 1.0)
+	{
+		std::string FPS = std::to_string((1.0 / timeDiff) * counter);
+		std::string ms = std::to_string((timeDiff / counter) * 1000);
+		std::string fps = "OpenglGrass: " + FPS + " FPS / " + ms + "ms";
+
+		glfwSetWindowTitle(mWindow, fps.c_str());
+
+		preTime = crntTime;
+		counter = 0;
+	}
+}
+
+void Application::setTitle(const std::string& title)
+{
+	glfwSetWindowTitle(mWindow, title.c_str());
 }
 
 void Application::destory()
@@ -95,9 +127,9 @@ void Application::setKeyBoardCallback(KeyBoardCallBack callback)
 }
 
 
-void Application::frameBufferSizeCallBack(	GLFWwindow* window,
-											int width,
-											int height)
+void Application::frameBufferSizeCallBack(GLFWwindow* window,
+	int width,
+	int height)
 {
 	Application* self = (Application*)glfwGetWindowUserPointer(window);
 	if (self->mResizeCallBack != nullptr)
@@ -118,14 +150,14 @@ void Application::keyCallback(GLFWwindow* window, int key, int scancode, int act
 	Application* self = (Application*)glfwGetWindowUserPointer(window);
 	if (self->mKeyBoardCallBack != nullptr)
 	{
-		self->mKeyBoardCallBack(key,action,mods);
+		self->mKeyBoardCallBack(key, action, mods);
 	}
 }
 
 void Application::MouseCallback(GLFWwindow* window,
-								int button,
-								int action,
-								int mods)
+	int button,
+	int action,
+	int mods)
 {
 	Application* self = (Application*)glfwGetWindowUserPointer(window);
 	if (self->mMouseCallBack != nullptr)
@@ -136,19 +168,19 @@ void Application::MouseCallback(GLFWwindow* window,
 
 
 void Application::cursorCallback(GLFWwindow* window,
-								double xpos,
-								double ypos)
+	double xpos,
+	double ypos)
 {
 	Application* self = (Application*)glfwGetWindowUserPointer(window);
 	if (self->mCursorCallBack != nullptr)
 	{
-		self->mCursorCallBack(xpos,ypos);
+		self->mCursorCallBack(xpos, ypos);
 	}
 }
 
 void Application::scrollCallback(GLFWwindow* window,
-								double xoffset,
-								double yoffset)
+	double xoffset,
+	double yoffset)
 {
 	Application* self = (Application*)glfwGetWindowUserPointer(window);
 	if (self->mSrollCallBack != nullptr)

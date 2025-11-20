@@ -130,8 +130,27 @@ int main(void)
 	prepare();
 	initIMGUI();
 
+	double preTime = glfwGetTime();
+	unsigned int counter = 0;
+
     while (glApp->update())
     {
+		//glApp->calculateFPS(preTime, counter);
+		double crntTime = glfwGetTime();
+		double timeDiff = crntTime - preTime;
+		counter++;
+
+		if (timeDiff >= 1.0) { // 每秒更新一次
+			double fps = counter / timeDiff;
+			double msPerFrame = (timeDiff / counter) * 1000;
+
+			std::string FPS_Title = std::to_string(fps) + " FPS / " + std::to_string(msPerFrame) + " ms";
+			glApp->setTitle(FPS_Title);
+
+			preTime = crntTime;
+			counter = 0;
+		}
+
 		cameraControl->update();
 		renderer->setClearColor(clearColor);
 		// pass01 将Box渲染到colorAttachment上，新的fbo上

@@ -35,7 +35,7 @@ void AssimpInstanceLoader::processNode(
 	Object* node = new Object();
 	parent->addChild(node);
 
-	glm::mat4 localMatrix = getMat4f(ainode->mTransformation);
+	glm::mat4 localMatrix = AssimpTools::getGLMat4(ainode->mTransformation);
 
 	// 位置
 	glm::vec3 position;
@@ -44,6 +44,7 @@ void AssimpInstanceLoader::processNode(
 	// 缩放
 	glm::vec3 scale;
 
+	// 解析矩阵得到对应的position,欧拉角，缩放比例
 	Tools::decompose(localMatrix, position, eulerAbgle, scale);
 
 	node->setPosition(position);
@@ -165,19 +166,6 @@ InstanceMesh* AssimpInstanceLoader::processMesh(
 
 	return new InstanceMesh(geometry, material,instanceCount);
 }
-
-glm::mat4 AssimpInstanceLoader::getMat4f(aiMatrix4x4 value)
-{
-	glm::mat4 to(
-		value.a1, value.a2, value.a3, value.a4,
-		value.b1, value.b2, value.b3, value.b4,
-		value.c1, value.c2, value.c3, value.c4,
-		value.d1, value.d2, value.d3, value.d4
-	);
-	
-	return to;
-}
-
 
 AssimpInstanceLoader::AssimpInstanceLoader()
 {
